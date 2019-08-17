@@ -1,0 +1,11 @@
+This script uses commands as “eval” and “adb shell” in conjunction with file names. This lets to making this script very unsafe, since it can let to code injection.
+
+Even though, I have tried to escaped or block all unsafe characters, I’m afraid I’m not an expert to prevent all possible vulnerabilities.
+
+I don’t think that injecting code on files names is very common, but you never can be sure. Also, you might inject something your self by mistake.
+
+All I’m saying is, be careful on your file names. And also, use this code at your own risk.
+
+I might have avoided using “eval” but I don’t think “adb shell” could had been.
+
+I’m open to suggestions. Thank you.
