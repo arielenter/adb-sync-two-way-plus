@@ -56,23 +56,25 @@ function info_this {
     fi
 }
 function alert_this {
-	if [ -n "$use_zenity" ];then
-		lines=$(echo "$1" | wc -l)
-		if [ "$lines" -gt "30" ];then #use a text-info instead of a question dialog if the list of files it's too long
-			zenity --text-info --title="Do you want to continue anyway?" --window-icon=question --no-markup --width=500 --height=500 --ok-label "Yes" --cancel-label "No" --filename=<(echo "$1")
-		else
-			zenity --question --title="Do you want to continue anyway?" --ok-label "Yes" --cancel-label "No" --no-markup --text "$1"
-		fi
-		if ! [ "$?" -eq "0" ];then
-			sync_canceled
-		fi
-	else
-		read -p "$1"' Type "Y" or "y" for "Yes". Anything else will be "No": ' -n 1 -r
-		echo ""
-		if ! [[ "$REPLY" =~ ^[Yy]$ ]];then
-			sync_canceled
-		fi
-	fi
+    if [ -z $no_warns ];then
+	    if [ -n "$use_zenity" ];then
+		    lines=$(echo "$1" | wc -l)
+		    if [ "$lines" -gt "30" ];then #use a text-info instead of a question dialog if the list of files it's too long
+			    zenity --text-info --title="Do you want to continue anyway?" --window-icon=question --no-markup --width=500 --height=500 --ok-label "Yes" --cancel-label "No" --filename=<(echo "$1")
+		    else
+			    zenity --question --title="Do you want to continue anyway?" --ok-label "Yes" --cancel-label "No" --no-markup --text "$1"
+		    fi
+		    if ! [ "$?" -eq "0" ];then
+			    sync_canceled
+		    fi
+	    else
+		    read -p "$1"' Type "Y" or "y" for "Yes". Anything else will be "No": ' -n 1 -r
+		    echo ""
+		    if ! [[ "$REPLY" =~ ^[Yy]$ ]];then
+			    sync_canceled
+		    fi
+	    fi
+    fi
 }
 function sync_canceled {
 	message="Sync has been canceled. No changes were made."
@@ -311,7 +313,18 @@ OPTIONAL Arguments:
                       your system and installing it it's not an option.
 
     -p                This option can be used to prevent zenity's progress
-                      dialog boxes from appearing even if option “-g” is given."
+                      dialog boxes from appearing even if option “-g” is given.
+
+    -w                Normally, this script will show warns whenever it finds
+                      an abnormality. For instance, there might be a local file
+                      with a name that has an unsupported character for a file
+                      on android, which will prevent it from being sync. Every
+                      time a warn is given, the user will be asked if it wants
+                      to continue anyway, for instance, without syncing those
+                      files in the above mentioned example. By using this
+                      parameter, the   user won’t be asked, and all warnings
+                      will be answered with a “yes”, and the script will
+                      continue without any stop."
 if [ "$#" -eq 0 ];then
 	error_this "No argument given. Please provide at least the android path of the directory that is going to be sync." "1"
 fi
@@ -367,6 +380,9 @@ for i do
 			;;
 			"-r")
 				try_adb_root=true
+			;;
+			"-w")
+				no_warns=true
 			;;
 			"--help")
 				echo "$usage"
