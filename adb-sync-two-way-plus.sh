@@ -24,10 +24,6 @@ $message"
 	fi
 }
 trap 'error ${LINENO}' ERR
-function finish {
-  if [ -f .tmp_sync_file ];then rm .tmp_sync_file; fi
-}
-trap finish EXIT
 ##############################################
 function error_this {
 	(>&2 echo "ERROR: $1") #echo to stderr
@@ -240,7 +236,8 @@ function update_android_date {
 }
 ################## The script starts here ###################
 ################## Check arguments and requiarements before starting sync ######################
-usage="USAGE: adb-sync-two-way-plus.sh Android_absolute_path Local_absolute_path [OPTIONAL Arguments]
+usage="File and directorie(s) two way synchronization using adb (android debug bridge).
+USAGE: adb-sync-two-way-plus.sh Android_absolute_path Local_absolute_path [OPTIONAL Arguments]
 NOTE: If no local directory is given, the current directory is used insted.
 OPTIONAL Arguments:
    --help             Display this manual and exit ignoring
@@ -351,7 +348,7 @@ for i do
 				fi
 			;;
 			"-h")
-				look_for='./ \( ! -path "./" ! -name ".tmp_sync_file" ! -name ".sync_inventory.log*" \) -a \( -type f -or -type d \)'
+				look_for='./ \( ! -path "./" ! -name ".sync_inventory.log*" \) -a \( -type f -or -type d \)'
 			;;
 			"-n")
 				do_not_use_su=true
