@@ -370,7 +370,7 @@ for i do
 				notify='TRUE'
 			;;
 			"-p")
-				  no_progress_bars='TRUE'
+				no_progress_bars='TRUE'
 			;;
 			"-t")
 				dont_use_trash='TRUE'
@@ -539,6 +539,9 @@ run_with_su >/dev/null
 ! ([ -w "${path[2]}" ] && [ -r "${path[2]}" ]) && error_this "The local directory given ('${path[2]}') doesn't exist, or if it does, you don't have the right permissions to read nor/or to write on it. Please make sure you are giving the right path in the correct order and that you have read/write permissions for it."
 cd "${path[2]}"
 echo "Done. Now working on your sync..."
+if [ -n "$notify" ];then
+    notify-send "adb-sync-two-way-plus" "Now working on your sync..." -t 4000 -i emblem-default
+fi
 ################## Get local tree separating files from directories and discarding the ones with invalid names for android ################
 let_me_handle_it="TRUE"
 do[2]=$(eval "find $look_for -print0 2>/dev/null" | sed ':a;N;$!ba;s,\n,\[\:NPC\:\],g' | tr '\000' '\n' | sed 's,[[:cntrl:]],\[\:NPC\:\],g') #NPC is my way of pointing out Non Printable Character
@@ -593,7 +596,7 @@ fi
 ################## Get the Android tree ##################
 list[1]=$(eval "$adb_shell"\'" find $look_for 2>&1"' | while read -r;do if ([ -w "$REPLY" ] && [ -r "$REPLY" ]);then if [ -d "$REPLY" ];then echo "$REPLY|Directory|";else stat "$REPLY" -c "%n|%s|%Y|" ;fi;else if [ "$REPLY" != "" ];then echo "$REPLY|Invalid|"; fi; fi;done'\')
 list[1]=$(echo "${list[1]}" | tr -d "\r") #adb lines end both with \r and \n, but local terminal only ends with \n. I remove \r for comparation purposes
-no_read_write[1]=$(echo "${list[1]}" | grep "|Invalid|$" | cut -f1 -d "|")
+no_read_write[1]=$(echo "${list[1]}" | grep "|Invalid|$" | grep -v ".//.android_secure" | cut -f1 -d "|")
 list[1]=$(echo "${list[1]}" | grep -v "|Invalid|$" | cat)
 if [ "${no_read_write[1]}" ];then
 	message=$(echo "file or directory and its content won't be sync because you don't have read nor/or write permissions for it:")
