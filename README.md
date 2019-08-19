@@ -1,5 +1,6 @@
 # adb-sync-two-way-plus
 File and directorie(s) two way synchronization using adb (android debug bridge).
+
 USAGE: adb-sync-two-way-plus.sh Android_absolute_path Local_absolute_path [OPTIONAL Arguments]
 NOTE: If no local directory is given, the current directory is used insted.
 OPTIONAL Arguments:
