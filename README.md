@@ -65,7 +65,8 @@ OPTIONAL Arguments:
                       shell su” are not absolutely necessary for this script to
                       work but it is very much recommended. Unfortunately “adb
                       root” is not always available in all devices.
-    -t                When files or directories are going to be deleted on your
+
+   -t                When files or directories are going to be deleted on your
                       local device because they were deleted on your android
                       device, this script will usually try send them to your
                       system trash bin using command “gvfs-trash”. If instead
@@ -73,9 +74,11 @@ OPTIONAL Arguments:
                       you can use this option so that command “rm” is used.
                       This is also helpful if “gvfs-trash” is not available on
                       your system and installing it it's not an option.
-    -p                This option can be used to prevent zenity's progress
+
+   -p                This option can be used to prevent zenity's progress
                       dialog boxes from appearing even if option “-g” is given.
-    -w                Normally, this script will show warns whenever it finds
+
+   -w                Normally, this script will show warns whenever it finds
                       an abnormality. For instance, there might be a local file
                       with a name that has an unsupported character for a file
                       on android, which will prevent it from being sync. Every
