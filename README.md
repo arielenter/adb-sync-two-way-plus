@@ -6,6 +6,7 @@ USAGE: adb-sync-two-way-plus.sh Android_absolute_path Local_absolute_path [OPTIO
 NOTE: If no local directory is given, the current directory is used insted.
 
 OPTIONAL Arguments:
+
    --help             Display this manual and exit ignoring
                       all other arguments and taking no accions.
 
