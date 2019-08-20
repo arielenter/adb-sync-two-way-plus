@@ -134,8 +134,9 @@ function ask_list {
 		fi
 		answer="$choice"
 	else
+        compare=$(echo "$4" | sed "s,<b>,,g" | sed "s,</b>,,g" | sed "s,',,g" | sed "s,\\\,',g")
 		echo "WARNING: $3"
-		echo "$4"$'\n'
+		echo "$compare"$'\n'
 		list=$(echo "Option"$'\t'"$1" | sed "s,|,    \t,g")$'\n'
 		list+=$(echo "$values" | sed "s,|,  \t,g")$'\n'
 		echo "$list"
@@ -778,7 +779,7 @@ Choose the android operation, whether it is deletion or modification for the res
 			[ "${status[1]}" != "${status[2]}" ] && op_num=2
 			final_options="${options[$op_num]}"
 			[ "$instances" -gt "0" ] && final_options+=$'\n'$(eval "echo \"${additional[$op_num]}\"")
-			ask_list "$column_name" "$final_options" "$title" "The file '\''<b>$file_name</b>'\'' presents modifications from both the local computer and the android device since last time they were sync. What should I do?
+			ask_list "$column_name" "$final_options" "$title" "The file: '\''<b>$file_name</b>'\'' presents modifications from both the local computer and the android device since last time they were sync. What should I do?
 
 ${status_desc[1]}
 ${status_desc[2]}
@@ -1009,6 +1010,10 @@ for i in 1 2;do
         percentage=0
         number_of_file=1
         bytes_to=$(echo "${new_mod_files[$i]}" | cut -f2 -d "|" | paste -s -d+ - | bc)
+        if [[ $bytes_to == 0 ]];then
+            use_file_number=true
+            bytes_to=$number_of_files_to
+        fi
         bytes_done=0
         bytes_ended_now=0
 	    while read -r; do
@@ -1032,6 +1037,9 @@ for i in 1 2;do
                     if [[ $percentage_of_file =~ ^-?[0-9]+$ ]];then
                         bytes_ended=$(($percentage_of_file * $file_size / 100))
                         bytes_ended_now=$(($bytes_done+$bytes_ended))
+                    fi
+                    if [[ -n $use_file_number ]];then
+                        bytes_ended_now=$(( $number_of_file-1 ))
                     fi
                     percentage=$(($bytes_ended_now * 100 / $bytes_to))
                     overall="${what_to_do}ing file $number_of_file of $number_of_files_to\\n$bytes_ended_now/$bytes_to ($percentage%) bytes finished."
