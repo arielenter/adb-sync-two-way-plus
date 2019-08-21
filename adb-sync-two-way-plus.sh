@@ -441,7 +441,7 @@ if [ "$adb" == "adb" ];then
 	let_me_handle_it=""
 else
 	if ! [[ -x "$adb" ]]; then
-		error_this "Couldn't find '$adb'. Please make sure you are giving the right location and that it has execute permission."
+		error_this "Couldn't find the adb location given ('$adb'). Please make sure you are giving the right location and that it has execute permission."
 	else
 		if ! [[ $("$adb" version | grep "Android Debug Bridge") ]]; then
 			error_this "The file given ('$adb') doesn't apper to be a valid Android Debug Bridge executable."
