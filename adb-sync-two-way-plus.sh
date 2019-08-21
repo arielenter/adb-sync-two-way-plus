@@ -73,7 +73,7 @@ function alert_this {
     fi
 }
 function sync_canceled {
-	message="Sync has been canceled. No changes were made."
+	message="The process has been canceled. No changes were made."
 	echo "WARNING: $message"
 	if [ -n "$use_zenity" ];then
 		zenity --warning --no-markup --text "$message"
@@ -128,7 +128,7 @@ function ask_list {
 		done <<< "$columns_names"
 		values=$(echo "$values" | sed 's/^/\|/g' | sed "s,|,\n,g")
 		values="TRUE"$values
-		choice=$(echo "$values" | eval "zenity --window-icon=question --no-markup --list --title=\"$3\" --text='$4' --radiolist --print-column='ALL' --hide-column=\"2\" --width=800 --height=500 $columns")
+		choice=$(echo "$values" | eval "zenity --window-icon=question --no-markup --list --title=\"$3\" --text=\"$4\" --radiolist --print-column='ALL' --hide-column=\"2\" --width=800 --height=500 $columns")
 		if [ -z "$choice" ];then
 			sync_canceled
 		fi
