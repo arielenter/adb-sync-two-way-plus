@@ -238,7 +238,7 @@ function update_android_date {
 ################## The script starts here ###################
 ################## Check arguments and requiarements before starting sync ######################
 usage="File and directorie(s) two way synchronization using adb (android debug bridge).
-USAGE: adb-sync-two-way-plus.sh Android_absolute_path Local_absolute_path [OPTIONAL Arguments]
+USAGE: ./adb-sync-two-way-plus.sh Android_absolute_path Local_absolute_path [OPTIONAL Arguments]
 NOTE: If no local directory is given, the current directory is used insted.
 OPTIONAL Arguments:
    --help             Display this manual and exit ignoring
@@ -929,7 +929,7 @@ for i in "y=1; x=2" "y=2; x=1";do
                   if [ "$y" -eq 2 ];then
 		                  original_location_escaped=$(echo "$original_location" | sed "s,','\"'\"'\"'\"'\"'\"'\"'\"',g")
 		                  new_location_escaped=$(echo "$new_location" | sed "s,','\"'\"'\"'\"'\"'\"'\"'\"',g")
-                			current_epoch=$(eval "$adb_shell""' mv '\"'\"'$original_location_escaped'\"'\"' '\"'\"'$new_location_escaped'\"'\"'; stat '\"'\"'$new_location_escaped'\"'\"' -c %Y'" </dev/tty | tr -d "\r")
+                          urrent_epoch=$(eval "$adb_shell""' mv '\"'\"'$original_location_escaped'\"'\"' '\"'\"'$new_location_escaped'\"'\"'; stat '\"'\"'$new_location_escaped'\"'\"' -c %Y'" </dev/tty | tr -d "\r")
 		                  if [ "$current_epoch" != "$original_epoch" ];then
                         file_name="$new_location"
                         epoch[1]="$current_epoch"
