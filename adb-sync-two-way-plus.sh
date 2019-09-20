@@ -595,7 +595,7 @@ ${no_read_write[2]}
 Do you want to continue the synchronization without it or them?"
 fi
 ################## Get the Android tree ##################
-list[1]=$(eval "$adb_shell"\'" find $look_for 2>&1"' | while read -r;do if ([ -w "$REPLY" ] && [ -r "$REPLY" ]);then if [ -d "$REPLY" ];then echo "$REPLY|Directory|";else stat "$REPLY" -c "%n|%s|%Y|" ;fi;else if [ "$REPLY" != "" ];then echo "$REPLY|Invalid|"; fi; fi;done'\')
+list[1]=$(eval "$adb_shell"\'" find $look_for 2>&1"' | while read -r;do if ( ! [[ $(echo "$REPLY" | grep "/\.") ]]; );then if ([ -w "$REPLY" ] && [ -r "$REPLY" ]);then if [ -d "$REPLY" ];then echo "$REPLY|Directory|";else stat "$REPLY" -c "%n|%s|%Y|" ;fi;else if [ "$REPLY" != "" ];then echo "$REPLY|Invalid|"; fi; fi; fi;done'\')
 list[1]=$(echo "${list[1]}" | tr -d "\r") #adb lines end both with \r and \n, but local terminal only ends with \n. I remove \r for comparation purposes
 no_read_write[1]=$(echo "${list[1]}" | grep "|Invalid|$" | grep -v ".//.android_secure" | cut -f1 -d "|")
 list[1]=$(echo "${list[1]}" | grep -v "|Invalid|$" | cat)
