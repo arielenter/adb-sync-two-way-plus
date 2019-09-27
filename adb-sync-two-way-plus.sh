@@ -256,7 +256,9 @@ OPTIONAL Arguments:
 
    -h                 Include hidden files.
 
-   -g                 Use zenity GTK+ (GUI) dialog boxes.
+   -g                 Use zenity GTK+ (GUI) dialog boxes.  This option will also
+                      be used if this script is run from the file manager
+                      istead of from terminal even if -g is not given.
 
    -f                 Use notify-send to send a system notification when a
                       synchronization has successfully ended. This will also 
