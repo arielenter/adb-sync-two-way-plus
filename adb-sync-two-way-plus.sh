@@ -1,4 +1,14 @@
 #!/bin/bash
+if (( SHLVL == 1 ));then
+    let_me_handle_it="TRUE"
+    if ! hash zenity 2>/dev/null;then
+        x-terminal-emulator -e bash -c "echo 'Zenity (GTK+) doesn't seem to be installed on your system. Please install it or run this script on terminal instead.'; sleep 10"
+        exit
+    else
+	    use_zenity='TRUE'
+    fi
+    let_me_handle_it=""
+fi
 ################## Functions declaration ######################
 ################## Error Handler #############
 trap "exit 1" TERM
@@ -322,11 +332,14 @@ OPTIONAL Arguments:
                       files in the above mentioned example. By using this
                       parameter, the   user won’t be asked, and all warnings
                       will be answered with a “yes”, and the script will
-                      continue without any stop."
+                      continue without any stop.
+
+    -l                This scipt will follow symlinks as if they where
+                      directories."
 if [ "$#" -eq 0 ];then
 	error_this "No argument given. Please provide at least the android path of the directory that is going to be sync." "1"
 fi
-look_for=' ./ \( ! -path "./" ! -path "/.*" ! -name ".*" \) -a \( -type f -or -type d \)'
+look_for='./ \( ! -path "./" ! -path "/.*" ! -name ".*" \) -a \( -type f -or -type d \)'
 adb="adb"
 attribute=""
 do_not_use_su=false
@@ -382,6 +395,9 @@ for i do
 			"-w")
 				no_warns=true
 			;;
+            "-l")
+                follow_symlinks=true
+            ;;
 			"--help")
 				echo "$usage"
 				exit
@@ -418,6 +434,9 @@ for i do
 		attribute=""
 	fi
 done
+if [ -n "$follow_symlinks" ];then
+    look_for="-L $look_for"
+fi
 if [ -z "$no_progress_bars" ] && [ -n "$use_zenity" ];then
 	if ! hash unbuffer 2>/dev/null;then
 		error_this "Command 'unbuffer' doesn't seem to be installed on your system. 'unbuffer' is essential to use ‘Zenity’ progress dialogs. Please install it or either remove the -g option or add the -p so that no progress dialogs are used and terminal messages are instead. Then run this script again." "1"
@@ -734,6 +753,7 @@ $present_in_both"
 					touch -m -t ${date_var[1]} "$file_name"
 					inventory_list+=$'\n'"${side[1]}"
 				fi
+                echo "Updating '$file_name's modification date to match."
 			done <<< "$present_in_both"
 		fi
 	fi
